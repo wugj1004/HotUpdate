@@ -1,0 +1,76 @@
+apply plugin: 'com.android.application'
+
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.wugj.hotfix"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //允许拆包
+        multiDexEnabled true
+        //拆包配置主dex中包含的class
+        multiDexKeepFile file('multidex.keep')
+        //拆包后代码混淆
+//        multiDexKeepProguard file('multidex-config.pro')
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    //高版本的gradle配置dex multidex依赖版本 >= 1.0.3
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries = false
+        //配置multidex参数
+        additionalParameters = [
+                //enable multidex
+                '--multi-dex',
+                // 设置multidex.keep文件中class为第一个dex文件中包含的class，如果没有下一项设置此项无作用
+                '--main-dex-list=/multidex.keep',
+                //强制拆分dex，此项添加后主dex文件中只包含-main-dex-list列表中class
+                '--minimal-main-dex',
+                //每个Dex文件中的最大id数/每个包内方法数上限
+                '--set-max-idx-number=48000'
+        ]
+    }
+
+//    //multidex依赖版本 <= 1.0.1
+//    afterEvaluate {
+//        tasks.matching {
+//            it.name.startsWith('dex')
+//        }.each { dx ->
+//            if (dx.additionalParameters == null) {
+//                dx.additionalParameters = []
+//            }
+//            enable multidex
+////            dx.additionalParameters += '--multi-dex'
+//            // 设置multidex.keep文件中class为第一个dex文件中包含的class，如果没有下一项设置此项无作用
+//            dx.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
+//            //强制拆分dex，此项添加后主dex文件中只包含-main-dex-list列表中class
+//            dx.additionalParameters += '--minimal-main-dex'
+//            //每个Dex文件中的最大id数/每个包内方法数上限
+//            dx.additionalParameters += '--set-max-idx-number=48000'
+//        }
+//    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation 'com.android.support:multidex:1.0.3'
+}
