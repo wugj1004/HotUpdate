@@ -98,15 +98,14 @@ public class ThirdActivity extends AppCompatActivity {
             return ;
         }
         //获取皮肤包文件
-        File skinFile = skinFiles[0];
-        String skinFileName = skinFile.getName();
-        String skinFilePath = skinFile.getAbsolutePath();
+        File archiveFile = skinFiles[0];
+        String archiveFilePath = archiveFile.getAbsolutePath();
 
         //加载外部皮肤包
-        mSkinManager.loadSkinRes(mContext, skinFilePath);
+        mSkinManager.loadSkinRes(mContext, archiveFilePath);
         if (mSkinManager.getSkinResource() != null) {
             //获取新资源id
-            int drawSkinId = mSkinManager.obtainExternalResourceId(this,"resplugin-debug.apk", R.mipmap.skin);
+            int drawSkinId = mSkinManager.obtainExternalResourceId(this,archiveFilePath, R.mipmap.skin);
             //加载新皮肤
             icon.setImageDrawable(mSkinManager.getSkinResource().getDrawable(drawSkinId));
         }

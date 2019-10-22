@@ -110,7 +110,7 @@ public class ResManager {
     }
 
 
-    public int obtainExternalResourceId(Context context, String fileName, int oldResourceId){
+    public int obtainExternalResourceId(Context context, String archiveFilePath, int oldResourceId){
         int externalResourceIdentifier = -1;
         //资源名：skin
         String resourceEntryName = context.getResources().getResourceEntryName(oldResourceId);
@@ -119,10 +119,11 @@ public class ResManager {
         System.out.println("resourceEntryName:"+resourceEntryName+";resourceTypeName:"+resourceTypeName);
 
         PackageManager pm = context.getPackageManager();
-        String archive = String.format("%s%s%s",archivePath, File.separator,fileName);
-        PackageInfo info = pm.getPackageArchiveInfo(archive, PackageManager.GET_ACTIVITIES);
-
+//        String archive = String.format("%s%s%s",archivePath, File.separator,externalZipName);
+        PackageInfo info = pm.getPackageArchiveInfo(archiveFilePath, PackageManager.GET_ACTIVITIES);
+        //获取外部资源包名
         String packageName = info.packageName;
+        //从外部资源中获取对应资源id
         externalResourceIdentifier = mResources.getIdentifier(resourceEntryName,resourceTypeName,packageName);
 
         return externalResourceIdentifier;
